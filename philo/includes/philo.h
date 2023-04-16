@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/13 16:10:33 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/04/16 19:37:03 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 # include <unistd.h>
 # include <limits.h>
 # include <stdbool.h>
+# include <stdlib.h>
+
+typedef struct s_philo	t_philo;
 
 typedef struct s_sim
 {
@@ -26,13 +29,19 @@ typedef struct s_sim
 	size_t	time_to_sleep;
 	size_t	time_to_die;
 	size_t	philo_count;
+	t_philo	*philo;
 }	t_sim;
 
 typedef struct s_philo
 {
-
+	size_t	philo_num;
+	size_t	lasteat_time;
+	t_sim	*sim;
 }	t_philo;
 
 bool	validate_arg(char **av);
 size_t	atos(char *str);
+bool	parser(char **av);
+void	makethreads(t_philo *philo, pthread_t *p_th);
+void	define_struct(t_philo *philo, t_sim *sim);
 #endif
