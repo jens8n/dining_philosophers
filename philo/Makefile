@@ -6,7 +6,7 @@
 #    By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/10 16:41:43 by jebucoy           #+#    #+#              #
-#    Updated: 2023/04/11 18:41:42 by jebucoy          ###   ########.fr        #
+#    Updated: 2023/04/17 17:46:08 by jebucoy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ CFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -g -I $(HEADER) -pthread
 
 SRCS	=	main.c \
 			parsing.c \
+			init.c	\
 
 OBJS	= $(SRCS:.c=.o)
 
