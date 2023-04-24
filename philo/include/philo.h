@@ -13,6 +13,14 @@
 #ifndef PHILO_H
 # define PHILO_H
 
+# define RESET   "\033[0m"
+# define BLACK   "\033[30m"
+# define RED     "\033[31m"
+# define GREEN   "\033[32m"
+# define YELLOW  "\033[33m"
+# define BLUE    "\033[34m"      
+# define MAGENTA "\033[35m"
+
 # include <sys/types.h>
 # include <pthread.h>
 # include <stdio.h>
@@ -30,6 +38,7 @@ typedef struct s_sim
 	size_t	time_to_sleep;
 	size_t	time_to_die;
 	size_t	philo_count;
+	size_t	start_tv;
 	bool	forks;
 	t_philo	*philo;
 }	t_sim;
@@ -48,5 +57,6 @@ void	make_threads(t_philo *philo);
 void	define_struct(t_sim *sim);
 void	init_sim_args(char **av, t_sim *sim);
 void	*routine(void *philo);
+size_t	get_usec();
 
 #endif

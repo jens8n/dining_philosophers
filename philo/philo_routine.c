@@ -12,14 +12,31 @@
 
 #include "philo.h"
 
+//converts current time in milisecond
+size_t	get_usec()
+{
+	struct timeval	cur;
+	size_t			milli;
+
+	gettimeofday(&cur, NULL);
+	milli = (cur.tv_sec * 1000) + (cur.tv_usec / 1000);
+	return (milli);
+}
+
 void	philo_eat(t_philo *philo)
 {
-	printf("philosopher %zu is eating\n", philo->philo_idx);
+	size_t	eat_tv;
+
+	eat_tv = get_usec();
+	printf(RED"%zum ", eat_tv - philo->sim->start_tv);
+	// printf("start time = %zum\n", philo->sim->start_tv);
+	// printf("eat time = %zum ", eat_tv);
+	printf("philosopher %zu is eating\n"RESET, philo->philo_idx);
 }
 
 void	philo_think(t_philo *philo)
 {
-	printf("philosopher %zu is think\n", philo->philo_idx);
+	printf(BLUE"philosopher %zu is thick\n"RESET, philo->philo_idx);
 }
 
 void	philo_sleep(t_philo *philo)
@@ -30,9 +47,7 @@ void	philo_sleep(t_philo *philo)
 void	*routine(void *philo)
 {
 	t_philo	*p;
-	size_t	i;
 
-	i = 0;
 	p = (t_philo *)philo;
 	while (1)
 	{

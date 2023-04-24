@@ -62,6 +62,8 @@ void	make_threads(t_philo *philo)
 
 	i = -1;
 	p_th = (pthread_t *)malloc(sizeof(pthread_t) * philo->sim->philo_count);
+	philo->sim->start_tv = get_usec();
+	printf("time: %ld\n", philo->sim->start_tv);
 	while (++i < philo->sim->philo_count)
 		pthread_create(&p_th[i], NULL, routine, (void *)&philo[i]);
 	i = -1;
