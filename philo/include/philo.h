@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/17 18:22:39 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/04/24 20:20:47 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef struct s_sim
 
 typedef struct s_philo
 {
-	size_t	philo_num;
+	size_t	philo_idx;
 	size_t	lasteat_time;
 	t_sim	*sim;
 }	t_philo;
@@ -44,6 +44,9 @@ typedef struct s_philo
 bool	validate_arg(char **av);
 size_t	atos(char *str);
 bool	parser(char **av);
-void	make_threads(t_philo *philo, pthread_t *p_th);
-void	define_struct(t_philo *philo, t_sim *sim);
+void	make_threads(t_philo *philo);
+void	define_struct(t_sim *sim);
+void	init_sim_args(char **av, t_sim *sim);
+void	*routine(void *philo);
+
 #endif

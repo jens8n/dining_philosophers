@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 17:20:22 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/17 17:47:44 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/04/24 17:21:39 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,17 @@
 
 int	main(int ac, char **av)
 {
-	t_sim	sim;
-	pthread_t	*p_th;
+	t_sim		sim;
 
-	p_th = NULL;
-	if (ac == 6)
+	if (ac < 5 || ac > 6)
 	{
-		if (parser(av) == true)
-		{
-			init_sim_args(av, &sim, p_th);
-		}
+		printf("error\n");
+		return (1);
+	}
+	if (parser(av) == true)
+	{
+		init_sim_args(av, &sim);
+		make_threads(sim.philo);
 	}
 	return (0);
 }
