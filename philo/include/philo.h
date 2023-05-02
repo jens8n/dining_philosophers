@@ -34,25 +34,27 @@ typedef struct s_philo	t_philo;
 
 typedef struct s_sim
 {
-	size_t	time_to_eat;
-	size_t	time_to_sleep;
-	size_t	time_to_die;
-	size_t	philo_count;
-	size_t	start_tv;
-	bool	forks;
-	t_philo	*philo;
+	size_t			tte;
+	size_t			tts;
+	size_t			ttd;
+	size_t			philo_count;
+	size_t			start_tv;
+	bool			forks;
+	t_philo			*philo;
+	pthread_mutex_t	*mtx;
 }	t_sim;
 
 typedef struct s_philo
 {
-	size_t	philo_idx;
-	size_t	lasteat_time;
-	t_sim	*sim;
+	size_t			philo_idx;
+	size_t			lasteat_time;
+	t_sim			*sim;
 }	t_philo;
 
 bool	validate_arg(char **av);
-size_t	atos(char *str);
 bool	parser(char **av);
+size_t	atos(char *str);
+
 void	make_threads(t_philo *philo);
 void	define_struct(t_sim *sim);
 void	init_sim_args(char **av, t_sim *sim);

@@ -15,11 +15,11 @@
 void	init_sim_args(char **av, t_sim *sim)
 {
 	sim->philo_count = atos(av[1]);
-	sim->time_to_die = atos(av[2]);
-	sim->time_to_eat = atos(av[3]);
-	sim->time_to_sleep = atos(av[4]);
-	if (sim->philo_count == 0 || sim->time_to_die == 0
-		|| sim->time_to_eat == 0 || sim->time_to_sleep == 0)
+	sim->ttd = atos(av[2]);
+	sim->tte = atos(av[3]);
+	sim->tts = atos(av[4]);
+	if (sim->philo_count == 0 || sim->ttd == 0
+		|| sim->tte == 0 || sim->tts == 0)
 		return ;
 	sim->philo = (t_philo *)malloc(sizeof(t_philo) * sim->philo_count);
 	define_struct(sim);
@@ -35,6 +35,7 @@ void	define_struct(t_sim *sim)
 		sim->philo[i].philo_idx = i;
 		sim->philo[i].lasteat_time = 0;
 		sim->philo[i].sim = sim;
+		pthread_mutex_init(&sim->mtx[i], NULL);
 		i++;
 	}
 }
@@ -47,9 +48,9 @@ void	*debug_struct(void *philo)
 	p = (t_philo *)philo;
 	printf("philo_count = %zu\n", p->sim->philo_count);
 	printf("philo_num = %zu\n", p->philo_idx);
-	printf("time_to_die = %zu\n", p->sim->time_to_die);
-	printf("time_to_eat = %zu\n", p->sim->time_to_eat);
-	printf("time_to_sleep = %zu\n", p->sim->time_to_sleep);
+	printf("time_to_die = %zu\n", p->sim->ttd);
+	printf("time_to_eat = %zu\n", p->sim->tte);
+	printf("time_to_sleep = %zu\n", p->sim->tts);
 	printf("last eat time = %zu\n", p->lasteat_time);
 	return (NULL);
 }
