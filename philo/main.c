@@ -14,8 +14,8 @@
 
 int	main(int ac, char **av)
 {
-	t_sim		sim;
-
+	t_sim			sim;
+	// pthread_mutex_t	mtx;
 	if (ac < 5 || ac > 6)
 	{
 		printf("error\n");

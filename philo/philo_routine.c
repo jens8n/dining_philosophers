@@ -29,18 +29,24 @@ void	philo_eat(t_philo *philo)
 
 	eat_tv = get_usec();
 	printf(RED"%zum ", eat_tv - philo->sim->start_tv);
-	// printf("start time = %zum\n", philo->sim->start_tv);
-	// printf("eat time = %zum ", eat_tv);
 	printf("philosopher %zu is eating\n"RESET, philo->philo_idx);
 }
 
 void	philo_think(t_philo *philo)
 {
-	printf(BLUE"philosopher %zu is thick\n"RESET, philo->philo_idx);
+	size_t	think_tv;
+
+	think_tv = get_usec();
+	printf(BLUE"%zum ", think_tv - philo->sim->start_tv);
+	printf("philosopher %zu is thicking\n"RESET, philo->philo_idx);
 }
 
 void	philo_sleep(t_philo *philo)
 {
+	size_t	sleep_tv;
+
+	sleep_tv = get_usec();
+	printf("%zum ", sleep_tv - philo->sim->start_tv);
 	printf("philosopher %zu is sleeping\n", philo->philo_idx);
 }
 
@@ -52,9 +58,7 @@ void	*routine(void *philo)
 	while (1)
 	{
 		philo_eat(p);
-		sleep(1);
 		philo_think(p);
-		sleep(1);
 		philo_sleep(p);
 		sleep(1);
 	}
