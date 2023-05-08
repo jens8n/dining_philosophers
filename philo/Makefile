@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+         #
+#    By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/10 16:41:43 by jebucoy           #+#    #+#              #
-#    Updated: 2023/04/24 20:21:03 by jebucoy          ###   ########.fr        #
+#    Updated: 2023/05/08 21:45:39 by jebucoy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,12 +16,13 @@ HEADER	=	./include
 
 CC	=	cc
 
-CFLAGS	=	-Wall -Wextra -Werror -fsanitize=address -g -I $(HEADER) -pthread
+CFLAGS	=	-Wall -Wextra -Werror  -g -I $(HEADER) -pthread #-fsanitize=address
 
 SRCS	=	main.c \
 			parsing.c \
 			init.c	\
 			philo_routine.c \
+			utils.c \
 
 OBJS	= $(SRCS:.c=.o)
 

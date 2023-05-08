@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/24 20:20:47 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/08 21:55:14 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # include <stdbool.h>
 # include <stdlib.h>
 # include <sys/time.h>
+# include <stdint.h>
 
 typedef struct s_philo	t_philo;
 
@@ -38,10 +39,11 @@ typedef struct s_sim
 	size_t			tts;
 	size_t			ttd;
 	size_t			philo_count;
-	size_t			start_tv;
-	bool			forks;
+	size_t			start_time;
+	bool			*forks;
 	t_philo			*philo;
-	pthread_mutex_t	*mtx;
+	pthread_mutex_t	*fork_mtx;
+	pthread_mutex_t	msg_mtx;
 }	t_sim;
 
 typedef struct s_philo
@@ -55,10 +57,13 @@ bool	validate_arg(char **av);
 bool	parser(char **av);
 size_t	atos(char *str);
 
+void	*ft_calloc(size_t count, size_t size);
+
 void	make_threads(t_philo *philo);
 void	define_struct(t_sim *sim);
 void	init_sim_args(char **av, t_sim *sim);
 void	*routine(void *philo);
 size_t	get_usec();
+bool	check_death(t_philo *philo);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/24 20:13:57 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/08 22:08:09 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	init_sim_args(char **av, t_sim *sim)
 		|| sim->tte == 0 || sim->tts == 0)
 		return ;
 	sim->philo = (t_philo *)malloc(sizeof(t_philo) * sim->philo_count);
+	pthread_mutex_init(&sim->msg_mtx, NULL);
 	define_struct(sim);
 }
 
@@ -30,12 +31,14 @@ void	define_struct(t_sim *sim)
 	size_t	i;
 
 	i = 0;
+	sim->fork_mtx = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), sim->philo_count);
+	sim->forks = (bool *)malloc(sizeof(bool) * sim->philo_count);
 	while (i < sim->philo_count)
 	{
 		sim->philo[i].philo_idx = i;
-		sim->philo[i].lasteat_time = 0;
 		sim->philo[i].sim = sim;
-		pthread_mutex_init(&sim->mtx[i], NULL);
+		sim->forks[i] = false;
+		pthread_mutex_init(&sim->fork_mtx[i], NULL);
 		i++;
 	}
 }
@@ -63,15 +66,16 @@ void	make_threads(t_philo *philo)
 
 	i = -1;
 	p_th = (pthread_t *)malloc(sizeof(pthread_t) * philo->sim->philo_count);
-	philo->sim->start_tv = get_usec();
-	printf("time: %ld\n", philo->sim->start_tv);
+	philo->sim->start_time = get_usec();
+	// printf("time: %ld\n", philo->sim->start_time);
 	while (++i < philo->sim->philo_count)
+	{
+		philo[i].lasteat_time = philo->sim->start_time;
 		pthread_create(&p_th[i], NULL, routine, (void *)&philo[i]);
+	}
 	i = -1;
-	printf("threads are created\n");
 	while (++i < philo->sim->philo_count)
 	{
 		pthread_join(p_th[i], NULL);
-		printf("a threads is joined\n");
 	}
 }
