@@ -6,7 +6,7 @@
 #    By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/10 16:41:43 by jebucoy           #+#    #+#              #
-#    Updated: 2023/05/08 21:45:39 by jebucoy          ###   ########.fr        #
+#    Updated: 2023/05/09 18:00:36 by jebucoy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRCS	=	main.c \
 			init.c	\
 			philo_routine.c \
 			utils.c \
+			task_msg.c \
 
 OBJS	= $(SRCS:.c=.o)
 

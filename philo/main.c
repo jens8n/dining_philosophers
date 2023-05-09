@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 17:20:22 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/24 17:21:39 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/09 22:46:39 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//replace all usleep with my_sleep()
 
 int	main(int ac, char **av)
 {

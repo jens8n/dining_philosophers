@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/08 22:08:09 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/09 21:45:29 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,7 @@ void	make_threads(t_philo *philo)
 
 	i = -1;
 	p_th = (pthread_t *)malloc(sizeof(pthread_t) * philo->sim->philo_count);
-	philo->sim->start_time = get_usec();
-	// printf("time: %ld\n", philo->sim->start_time);
+	philo->sim->start_time = get_milli();
 	while (++i < philo->sim->philo_count)
 	{
 		philo[i].lasteat_time = philo->sim->start_time;
