@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jebucoy <jebucoy@student.42.fr>            +#+  +:+       +#+        */
+/*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:17:50 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/04/11 20:05:05 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/10 20:14:32 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+//handle inputs greater than int max
 
 bool	parser(char **av)
 {
@@ -63,7 +65,7 @@ size_t	atos(char *str)
 	n = 0;
 	while ((str[i] >= 9 && str[i] <= 13) || str[i] == 32)
 			i++;
-	if (str[i] == '+')
+	while (str[i] == '+')
 		i++;
 	while (str[i] && str[i] >= 48 && str[i] <= 57)
 	{

@@ -6,24 +6,27 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/09 21:45:29 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/14 03:00:20 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	init_sim_args(char **av, t_sim *sim)
+// handle stopping simulation in a clean way
+
+bool	init_sim_args(char **av, t_sim *sim)
 {
-	sim->philo_count = atos(av[1]);
+	sim->p_count = atos(av[1]);
 	sim->ttd = atos(av[2]);
 	sim->tte = atos(av[3]);
 	sim->tts = atos(av[4]);
-	if (sim->philo_count == 0 || sim->ttd == 0
-		|| sim->tte == 0 || sim->tts == 0)
-		return ;
-	sim->philo = (t_philo *)malloc(sizeof(t_philo) * sim->philo_count);
+	if (av[5] != NULL)
+		sim->eat_rep = atos(av[5]);
+	sim->philo = (t_philo *)ft_calloc(sizeof(t_philo), sim->p_count); 
+	sim->dead_body = false;
 	pthread_mutex_init(&sim->msg_mtx, NULL);
 	define_struct(sim);
+	return (true);
 }
 
 void	define_struct(t_sim *sim)
@@ -31,13 +34,13 @@ void	define_struct(t_sim *sim)
 	size_t	i;
 
 	i = 0;
-	sim->fork_mtx = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), sim->philo_count);
-	sim->forks = (bool *)malloc(sizeof(bool) * sim->philo_count);
-	while (i < sim->philo_count)
+	sim->fork_mtx = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), sim->p_count);
+	sim->fork = (bool *)ft_calloc(sizeof(bool), sim->p_count);
+	while (i < sim->p_count)
 	{
-		sim->philo[i].philo_idx = i;
+		sim->philo[i].p_idx = i;
 		sim->philo[i].sim = sim;
-		sim->forks[i] = false;
+		sim->fork[i] = false;
 		pthread_mutex_init(&sim->fork_mtx[i], NULL);
 		i++;
 	}
@@ -49,8 +52,8 @@ void	*debug_struct(void *philo)
 	t_philo	*p;
 
 	p = (t_philo *)philo;
-	printf("philo_count = %zu\n", p->sim->philo_count);
-	printf("philo_num = %zu\n", p->philo_idx);
+	printf("philo_count = %zu\n", p->sim->p_count);
+	printf("philo_num = %zu\n", p->p_idx);
 	printf("time_to_die = %zu\n", p->sim->ttd);
 	printf("time_to_eat = %zu\n", p->sim->tte);
 	printf("time_to_sleep = %zu\n", p->sim->tts);
@@ -59,22 +62,21 @@ void	*debug_struct(void *philo)
 }
 
 
-void	make_threads(t_philo *philo)
+void	make_threads(t_philo *p)
 {
-	size_t			i;
-	pthread_t		*p_th;
+	size_t		i;
 
 	i = -1;
-	p_th = (pthread_t *)malloc(sizeof(pthread_t) * philo->sim->philo_count);
-	philo->sim->start_time = get_milli();
-	while (++i < philo->sim->philo_count)
+	p->sim->p_th = (pthread_t *)ft_calloc(sizeof(pthread_t), p->sim->p_count);
+	p->sim->start_time = get_milli();
+	while (++i < p->sim->p_count)
 	{
-		philo[i].lasteat_time = philo->sim->start_time;
-		pthread_create(&p_th[i], NULL, routine, (void *)&philo[i]);
+		p[i].lasteat_time = p->sim->start_time;
+		pthread_create(&p->sim->p_th[i], NULL, routine, (void *)&p[i]);
 	}
 	i = -1;
-	while (++i < philo->sim->philo_count)
+	while (++i < p->sim->p_count)
 	{
-		pthread_join(p_th[i], NULL);
+		pthread_join(p->sim->p_th[i], NULL);
 	}
 }

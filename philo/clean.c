@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   clean.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/09 18:00:24 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/09 18:00:24 by jebucoy          ###   ########.fr       */
+/*   Created: 2023/05/13 19:28:14 by jebucoy           #+#    #+#             */
+/*   Updated: 2023/05/13 19:28:14 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_bzero(void *s, size_t n)
-{
-	memset(s, '\0', n);
-}
+// - function to clean up before stopping program
+// *free all allocations
+// *destroy all make_threads
+// return (true or false);
 
-void	*ft_calloc(size_t count, size_t size)
+bool   burial(t_philo *p)
 {
-	char	*m;
+    size_t i;
 
-	if (size != 0 && count > SIZE_MAX / size)
-		return (NULL);
-	m = (void *)malloc(count * size);
-	if (!m)
-		return (NULL);
-	ft_bzero(m, count * size);
-	return (m);
+    i = -1;
+    death_log(p, get_milli() - p->sim->start_time);
+    while (++i < p->sim->p_count)
+        pthread_mutex_destroy(&p->sim->fork_mtx[i]);
+    free(p->sim->philo);
+    free(p->sim->fork);
+    free(p->sim->fork_mtx);
+    return (true);
 }

@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:13:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/09 22:45:22 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/14 03:37:03 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,95 +23,108 @@ size_t	get_milli()
 	return (milli);
 }
 
-bool	my_sleep(t_philo *philo, size_t sleep_time)
+bool	my_sleep(t_philo *p, size_t sleep_time)
 {
 	size_t	start_time;
 	size_t	cur;
-	(void)philo;
 	
 	start_time = get_milli();
 	cur = 0;
-	printf(RED"start_time: %zum\n ", start_time);
 	while (cur != start_time + sleep_time)
 	{
-		// if (check_death(philo) == true)
-		// {
-		// 	printf("philo dead\n");
-		// 	return (false);
-		// }
+		if (check_death(p) == true)
+			return (false);
 		cur = get_milli();
-		usleep(200);
+		usleep(100);
 	}
-	printf("current time: %zum\n"RESET, cur);
 	return (true);
 }
 
-void	philo_eat(t_philo *philo)
+void	check_fork_status(t_philo *p, size_t idx, size_t *flag)
 {
-	size_t	left;
-	size_t	right;
-
-	left = philo->philo_idx;
-	right = left + 1;
-	if (left == philo->sim->philo_count - 1)
-			right = 0;
-	while (1)
+	pthread_mutex_lock(&p->sim->fork_mtx[idx]);
+	if (p->sim->fork[idx] == false)
 	{
-		pthread_mutex_lock(&philo->sim->fork_mtx[left]);
-		pthread_mutex_lock(&philo->sim->fork_mtx[right]);
-		if (philo->sim->forks[left] == false && philo->sim->forks[right] == false)
-		{
-			philo->sim->forks[left] = true;
-			philo->sim->forks[right] = true;
-			philo->lasteat_time = get_milli();
-			pthread_mutex_lock(&philo->sim->msg_mtx);
-			printf(GREEN"%zum ", philo->lasteat_time - philo->sim->start_time);
-			printf("philosopher %zu is eating\n"RESET, philo->philo_idx);
-			pthread_mutex_unlock(&philo->sim->msg_mtx);
-			usleep(philo->sim->tte * 1000);
-			philo->sim->forks[left] = false;
-			philo->sim->forks[right] = false;
-			break ;
-		}
-		pthread_mutex_unlock(&philo->sim->fork_mtx[left]);
-		pthread_mutex_unlock(&philo->sim->fork_mtx[right]);
+		p->sim->fork[idx] = true;
+		(*flag)++;
 	}
-	pthread_mutex_unlock(&philo->sim->fork_mtx[left]);
-	pthread_mutex_unlock(&philo->sim->fork_mtx[right]);
+	pthread_mutex_unlock(&p->sim->fork_mtx[idx]);
+}
+
+void	release_fork(t_philo *p, size_t left, size_t right)
+{
+	pthread_mutex_lock(&p->sim->fork_mtx[left]);
+	p->sim->fork[left] = false;
+	pthread_mutex_unlock(&p->sim->fork_mtx[left]);
+	pthread_mutex_lock(&p->sim->fork_mtx[right]);
+	p->sim->fork[right] = false;
+	pthread_mutex_unlock(&p->sim->fork_mtx[right]);
+}
+
+bool	philo_eat(t_philo *p)
+{
+	size_t	l;
+	size_t	r;
+	size_t	flag;
+	bool	ret;
+	
+	l = p->p_idx;
+	r = l + 1;
+	flag = 0;
+	ret = true;
+	if (l == p->sim->p_count - 1)
+			r = 0;
+	while (flag < 2 && ret)
+	{
+		if (check_death(p) == true)
+			return (false);
+		check_fork_status(p, l, &flag);
+		check_fork_status(p, r, &flag);
+		if (flag == 2)
+		{
+			task_log(p, GREEN"eating");
+			p->lasteat_time = get_milli();
+			ret = my_sleep(p, p->sim->tte);
+			release_fork(p, l, r);
+		}
+	}
+	return (ret);
 }
 
 //returns true if philo is dead
-bool	check_death(t_philo *philo)
+bool	check_death(t_philo *p)
 {
-	if (get_milli() - philo->lasteat_time > philo->sim->ttd)
+	pthread_mutex_lock(&p->sim->msg_mtx);
+	if (p->sim->dead_body == true)
 	{
-		printf("last eat time: %zum\n", philo->lasteat_time);
+		pthread_mutex_unlock(&p->sim->msg_mtx);
 		return (true);
 	}
+	if (get_milli() - p->lasteat_time > p->sim->ttd)
+	{
+		p->sim->dead_body = true;
+		pthread_mutex_unlock(&p->sim->msg_mtx);
+		death_log(p, get_milli() - p->sim->start_time);
+		return (true);
+	}
+	pthread_mutex_unlock(&p->sim->msg_mtx);
 	return (false);
 }
 
-void	philo_think(t_philo *philo)
+bool	philo_think(t_philo *p)
 {
-	size_t	think_tv;
-
-	think_tv = get_milli();
-	pthread_mutex_lock(&philo->sim->msg_mtx);
-	printf(BLUE"%zum ", think_tv - philo->sim->start_time);
-	printf("philosopher %zu is thicking\n"RESET, philo->philo_idx);
-	pthread_mutex_unlock(&philo->sim->msg_mtx);
+	if(check_death(p) == true)
+		return (false);
+	task_log(p, "thinking");
+	return (true);
 }
 
-void	philo_sleep(t_philo *philo)
+bool	philo_sleep(t_philo *p)
 {
-	size_t	sleep_tv;
-
-	sleep_tv = get_milli();
-	pthread_mutex_lock(&philo->sim->msg_mtx);
-	printf("%zum ", sleep_tv - philo->sim->start_time);
-	printf("philosopher %zu is sleeping\n", philo->philo_idx);
-	pthread_mutex_unlock(&philo->sim->msg_mtx);
-	usleep(philo->sim->tts);
+	task_log(p, BLUE"sleeping");
+	if (my_sleep(p, p->sim->tts) == false)
+		return (false);
+	return (true);
 }
 
 void	*routine(void *philo)
@@ -121,8 +134,9 @@ void	*routine(void *philo)
 	p = (t_philo *)philo;
 	while (1)
 	{
-		philo_eat(p);
-		philo_think(p);
-		philo_sleep(p);
+		if (!philo_eat(p)
+			|| !philo_sleep(p)
+			|| !philo_think(p))
+			return (NULL);		
 	}
 }

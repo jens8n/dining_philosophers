@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/09 21:42:58 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/14 03:32:38 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 # include <stdint.h>
+# include <string.h>
 
 typedef struct s_philo	t_philo;
 
@@ -38,18 +39,21 @@ typedef struct s_sim
 	size_t			tte;
 	size_t			tts;
 	size_t			ttd;
-	size_t			philo_count;
+	size_t			p_count;
 	size_t			start_time;
 	size_t			eat_rep;
-	bool			*forks;
+	bool			*fork;
 	t_philo			*philo;
 	pthread_mutex_t	*fork_mtx;
 	pthread_mutex_t	msg_mtx;
+	pthread_t		*p_th;
+	bool			dead_body;	
 }	t_sim;
 
 typedef struct s_philo
 {
-	size_t			philo_idx;
+	size_t			p_idx;
+	size_t			meal_count;
 	size_t			lasteat_time;
 	t_sim			*sim;
 }	t_philo;
@@ -57,15 +61,21 @@ typedef struct s_philo
 bool	validate_arg(char **av);
 bool	parser(char **av);
 size_t	atos(char *str);
-
 void	*ft_calloc(size_t count, size_t size);
+bool	my_sleep(t_philo *philo, size_t sleep_time);
+size_t	get_milli(void);
+
+void	eat_log(t_philo *philo, size_t timestamp);
+void    think_log(t_philo *p, size_t timestamp);
+void    sleep_log(t_philo *p, size_t timestamp);
+void	death_log(t_philo *philo, size_t timestamp);
+void    task_log(t_philo *p, char *msg);
+bool	check_death(t_philo *philo);
+bool	burial(t_philo *p);
 
 void	make_threads(t_philo *philo);
 void	define_struct(t_sim *sim);
-void	init_sim_args(char **av, t_sim *sim);
+bool	init_sim_args(char **av, t_sim *sim);
 void	*routine(void *philo);
-size_t	get_milli();
-bool	check_death(t_philo *philo);
-bool	my_sleep(t_philo *philo, size_t sleep_time);
 
 #endif
