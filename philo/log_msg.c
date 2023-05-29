@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+void    fork_log(t_philo *p, size_t fork, size_t forkn)
+{
+    size_t timestamp;
+
+    timestamp = get_milli() - p->sim->start_time;
+    pthread_mutex_lock(&p->sim->msg_mtx);
+    if (p->sim->dead_body == false)
+        printf("%zums Philosopher[%zu]"YELLOW" has taken fork[%zu] and fork[%zu]\n"RESET,
+            timestamp, p->p_id, fork, forkn);
+    pthread_mutex_unlock(&p->sim->msg_mtx);
+
+}
+
 void    task_log(t_philo *p, char *msg)
 {
     size_t timestamp;
@@ -19,14 +32,14 @@ void    task_log(t_philo *p, char *msg)
     timestamp = get_milli() - p->sim->start_time;
     pthread_mutex_lock(&p->sim->msg_mtx);
     if (p->sim->dead_body == false)
-        printf("%zum Philosopher[%zu] is %s\n"RESET, timestamp, p->p_idx, msg);
+        printf("%zums Philosopher[%zu] is %s\n"RESET, timestamp, p->p_id, msg);
     pthread_mutex_unlock(&p->sim->msg_mtx);
 }
 
 void    death_log(t_philo *p, size_t timestamp)
 {
     pthread_mutex_lock(&p->sim->msg_mtx);
-    printf(RED"%zum Philosopher[%zu] is dead\n"RESET, timestamp, p->p_idx);
+    printf(RED"%zums Philosopher[%zu] is dead\n"RESET, timestamp, p->p_id);
     pthread_mutex_unlock(&p->sim->msg_mtx);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/14 03:00:20 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/30 00:33:01 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,29 +38,13 @@ void	define_struct(t_sim *sim)
 	sim->fork = (bool *)ft_calloc(sizeof(bool), sim->p_count);
 	while (i < sim->p_count)
 	{
-		sim->philo[i].p_idx = i;
+		sim->philo[i].p_id = i;
 		sim->philo[i].sim = sim;
-		sim->fork[i] = false;
+		sim->fork[i] = -1;
 		pthread_mutex_init(&sim->fork_mtx[i], NULL);
 		i++;
 	}
 }
-
-
-void	*debug_struct(void *philo)
-{
-	t_philo	*p;
-
-	p = (t_philo *)philo;
-	printf("philo_count = %zu\n", p->sim->p_count);
-	printf("philo_num = %zu\n", p->p_idx);
-	printf("time_to_die = %zu\n", p->sim->ttd);
-	printf("time_to_eat = %zu\n", p->sim->tte);
-	printf("time_to_sleep = %zu\n", p->sim->tts);
-	printf("last eat time = %zu\n", p->lasteat_time);
-	return (NULL);
-}
-
 
 void	make_threads(t_philo *p)
 {

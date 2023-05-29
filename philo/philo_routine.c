@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:13:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/14 03:37:03 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/30 00:59:51 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,55 +40,63 @@ bool	my_sleep(t_philo *p, size_t sleep_time)
 	return (true);
 }
 
-void	check_fork_status(t_philo *p, size_t idx, size_t *flag)
+void	release_fork(t_philo *p, size_t fork1, size_t fork2)
 {
-	pthread_mutex_lock(&p->sim->fork_mtx[idx]);
-	if (p->sim->fork[idx] == false)
-	{
-		p->sim->fork[idx] = true;
-		(*flag)++;
-	}
-	pthread_mutex_unlock(&p->sim->fork_mtx[idx]);
+	pthread_mutex_lock(&p->sim->fork_mtx[fork1]);
+	p->sim->fork[fork1] = p->p_id;
+	pthread_mutex_unlock(&p->sim->fork_mtx[fork1]);
+	pthread_mutex_lock(&p->sim->fork_mtx[fork2]);
+	p->sim->fork[fork2] = p->p_id;
+	pthread_mutex_unlock(&p->sim->fork_mtx[fork2]);
 }
 
-void	release_fork(t_philo *p, size_t left, size_t right)
+void	pick_forks(t_philo *p, size_t fork1, size_t fork2)
 {
-	pthread_mutex_lock(&p->sim->fork_mtx[left]);
-	p->sim->fork[left] = false;
-	pthread_mutex_unlock(&p->sim->fork_mtx[left]);
-	pthread_mutex_lock(&p->sim->fork_mtx[right]);
-	p->sim->fork[right] = false;
-	pthread_mutex_unlock(&p->sim->fork_mtx[right]);
+	size_t	forks_held;
+
+	forks_held = 0;
+	while (forks_held != 2 && !check_death(p))
+	{
+		pthread_mutex_lock(&p->sim->fork_mtx[fork1]);
+		if (p->sim->fork[fork1] != -2 && p->sim->fork[fork1] != p->p_id)
+		{
+			p->sim->fork[fork1] = -2;
+			forks_held++;
+		}
+		pthread_mutex_unlock(&p->sim->fork_mtx[fork1]);
+		pthread_mutex_lock(&p->sim->fork_mtx[fork2]);
+		if (forks_held == 1 && p->sim->fork[fork2] != -2 && p->sim->fork[fork2] != p->p_id)
+		{
+			p->sim->fork[fork2] = -2;
+			forks_held++;
+		}
+		pthread_mutex_unlock(&p->sim->fork_mtx[fork2]);
+	}
+	if (!check_death(p))
+	{
+		fork_log(p, fork1, fork2);
+		task_log(p, GREEN"eating");
+		p->lasteat_time = get_milli();
+		my_sleep(p, p->sim->tte);
+		release_fork(p, fork1, fork2);
+	}	
 }
+
 
 bool	philo_eat(t_philo *p)
 {
 	size_t	l;
 	size_t	r;
-	size_t	flag;
-	bool	ret;
 	
-	l = p->p_idx;
+	l = p->p_id;
 	r = l + 1;
-	flag = 0;
-	ret = true;
 	if (l == p->sim->p_count - 1)
 			r = 0;
-	while (flag < 2 && ret)
-	{
-		if (check_death(p) == true)
-			return (false);
-		check_fork_status(p, l, &flag);
-		check_fork_status(p, r, &flag);
-		if (flag == 2)
-		{
-			task_log(p, GREEN"eating");
-			p->lasteat_time = get_milli();
-			ret = my_sleep(p, p->sim->tte);
-			release_fork(p, l, r);
-		}
-	}
-	return (ret);
+	if (p->p_id % 2 == 0)
+		pick_forks(p, r, l);
+	else
+		pick_forks(p, l, r);
+	return (true);
 }
 
 //returns true if philo is dead
@@ -140,3 +148,20 @@ void	*routine(void *philo)
 			return (NULL);		
 	}
 }
+
+	// while (flag < 2 && ret)
+	// {
+	// 	if (check_death(p) == true)
+	// 		return (false);
+	// 	check_fork_status(p, l, &flag);
+	// 	check_fork_status(p, r, &flag);
+	// 	if (flag == 2)
+	// 	{
+	// 		fork_log(p, l, r);
+	// 		task_log(p, GREEN"eating");
+	// 		p->lasteat_time = get_milli();
+	// 		ret = my_sleep(p, p->sim->tte);
+	// 		release_fork(p, l, r);
+	// 	}
+	// }
+	// return (ret);

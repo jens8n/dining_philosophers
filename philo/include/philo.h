@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/14 03:32:38 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/30 00:57:07 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,17 @@ typedef struct s_sim
 	size_t			p_count;
 	size_t			start_time;
 	size_t			eat_rep;
-	bool			*fork;
+	ssize_t			*fork;
 	t_philo			*philo;
 	pthread_mutex_t	*fork_mtx;
 	pthread_mutex_t	msg_mtx;
 	pthread_t		*p_th;
 	bool			dead_body;	
 }	t_sim;
-
+// 4 310 200 100
 typedef struct s_philo
 {
-	size_t			p_idx;
+	ssize_t			p_id;
 	size_t			meal_count;
 	size_t			lasteat_time;
 	t_sim			*sim;
@@ -70,6 +70,8 @@ void    think_log(t_philo *p, size_t timestamp);
 void    sleep_log(t_philo *p, size_t timestamp);
 void	death_log(t_philo *philo, size_t timestamp);
 void    task_log(t_philo *p, char *msg);
+void    fork_log(t_philo *p, size_t fork, size_t forkn);
+
 bool	check_death(t_philo *philo);
 bool	burial(t_philo *p);
 
