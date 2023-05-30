@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/30 23:33:53 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/31 01:07:24 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ bool	init_sim_args(char **av, t_sim *sim)
 		sim->eat_rep = atos(av[5]);
 	sim->philo = (t_philo *)ft_calloc(sizeof(t_philo), sim->p_count); 
 	sim->dead_body = false;
+	sim->flag = 0;
 	pthread_mutex_init(&sim->msg_mtx, NULL);
+	pthread_mutex_init(&sim->flag_mtx, NULL);
 	define_struct(sim);
 	return (true);
 }
@@ -41,6 +43,7 @@ void	define_struct(t_sim *sim)
 		sim->philo[i].p_id = i;
 		sim->philo[i].sim = sim;
 		sim->fork[i] = -1;
+		sim->philo[i].meal_count = 0;
 		pthread_mutex_init(&sim->fork_mtx[i], NULL);
 		i++;
 	}

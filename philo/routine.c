@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:13:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/30 23:55:34 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/31 01:49:25 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,23 @@ void	release_fork(t_philo *p, size_t fork1, size_t fork2)
 	pthread_mutex_lock(&p->sim->fork_mtx[fork2]);
 	p->sim->fork[fork2] = p->p_id;
 	pthread_mutex_unlock(&p->sim->fork_mtx[fork2]);
+}
+
+bool	track_meals(t_philo *p)
+{
+	p->meal_count++;
+	if (p->meal_count == p->sim->eat_rep)
+	{
+		pthread_mutex_lock(&p->sim->flag_mtx);
+		p->sim->flag++;
+		if (p->sim->flag == p->sim->eat_rep)
+		{
+			pthread_mutex_unlock(&p->sim->flag_mtx);
+			return (true);
+		}
+		pthread_mutex_unlock(&p->sim->flag_mtx);
+	}
+	return (false);
 }
 
 void	pick_forks(t_philo *p, size_t fork1, size_t fork2)
@@ -45,15 +62,8 @@ void	pick_forks(t_philo *p, size_t fork1, size_t fork2)
 		pthread_mutex_unlock(&p->sim->fork_mtx[fork2]);
 		usleep(200);
 	}
-	if (!check_death(p))
-	{
-		fork_log(p, fork1, fork2);
-		task_log(p, GREEN"eating");
-		p->lasteat_time = get_milli();
-		my_sleep(p, p->sim->tte);
-		release_fork(p, fork1, fork2);
-	}	
 }
+
 
 
 bool	philo_eat(t_philo *p)
@@ -69,6 +79,16 @@ bool	philo_eat(t_philo *p)
 		pick_forks(p, r, l);
 	else
 		pick_forks(p, l, r);
+	if (!check_death(p))
+	{
+		fork_log(p);
+		task_log(p, "eating", GREEN);
+		p->lasteat_time = get_milli();
+		my_sleep(p, p->sim->tte);
+		release_fork(p, l, r);
+		if (track_meals(p))
+			return (false);
+	}	
 	return (true);
 }
 
@@ -96,13 +116,13 @@ bool	philo_think(t_philo *p)
 {
 	if(check_death(p) == true)
 		return (false);
-	task_log(p, "thinking");
+	task_log(p, "thinking", MAGENTA);
 	return (true);
 }
 
 bool	philo_sleep(t_philo *p)
 {
-	task_log(p, BLUE"sleeping");
+	task_log(p, "sleeping", BLUE);
 	if (my_sleep(p, p->sim->tts) == false)
 		return (false);
 	return (true);
