@@ -29,3 +29,31 @@ void	*ft_calloc(size_t count, size_t size)
 	ft_bzero(m, count * size);
 	return (m);
 }
+
+//converts current time in milisecond
+size_t	get_milli()
+{
+	struct timeval	cur;
+	size_t			milli;
+
+	gettimeofday(&cur, NULL);
+	milli = (cur.tv_sec * 1000) + (cur.tv_usec / 1000);
+	return (milli);
+}
+
+bool	my_sleep(t_philo *p, size_t sleep_time)
+{
+	size_t	start_time;
+	size_t	cur;
+	
+	start_time = get_milli();
+	cur = 0;
+	while (cur != start_time + sleep_time)
+	{
+		if (check_death(p) == true)
+			return (false);
+		cur = get_milli();
+		usleep(100);
+	}
+	return (true);
+}

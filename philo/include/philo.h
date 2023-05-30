@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/30 00:57:07 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/30 23:38:22 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ typedef struct s_sim
 	pthread_mutex_t	*fork_mtx;
 	pthread_mutex_t	msg_mtx;
 	pthread_t		*p_th;
-	bool			dead_body;	
+	bool			dead_body;
+	size_t			flag;
 }	t_sim;
-// 4 310 200 100
+
 typedef struct s_philo
 {
 	ssize_t			p_id;

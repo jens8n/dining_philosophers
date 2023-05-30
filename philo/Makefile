@@ -6,7 +6,7 @@
 #    By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/10 16:41:43 by jebucoy           #+#    #+#              #
-#    Updated: 2023/05/28 15:08:24 by jebucoy          ###   ########.fr        #
+#    Updated: 2023/05/30 19:00:12 by jebucoy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ CFLAGS	=	-Wall -Wextra -Werror  -g3 -I $(HEADER) -pthread #-fsanitize=address
 SRCS	=	main.c \
 			parsing.c \
 			init.c	\
-			philo_routine.c \
+			routine.c \
 			utils.c \
 			log_msg.c \
 			clean.c \

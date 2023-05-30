@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/30 00:33:01 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/30 23:33:53 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	define_struct(t_sim *sim)
 
 	i = 0;
 	sim->fork_mtx = (pthread_mutex_t *)ft_calloc(sizeof(pthread_mutex_t), sim->p_count);
-	sim->fork = (bool *)ft_calloc(sizeof(bool), sim->p_count);
+	sim->fork = (ssize_t *)ft_calloc(sizeof(ssize_t), sim->p_count);
 	while (i < sim->p_count)
 	{
 		sim->philo[i].p_id = i;

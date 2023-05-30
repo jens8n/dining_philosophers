@@ -25,6 +25,7 @@ bool   burial(t_philo *p)
     death_log(p, get_milli() - p->sim->start_time);
     while (++i < p->sim->p_count)
         pthread_mutex_destroy(&p->sim->fork_mtx[i]);
+    pthread_mutex_destroy(&p->sim->msg_mtx);
     free(p->sim->philo);
     free(p->sim->fork);
     free(p->sim->fork_mtx);
