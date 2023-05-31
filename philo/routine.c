@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:13:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/31 01:49:25 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/31 20:27:43 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,23 @@ void	release_fork(t_philo *p, size_t fork1, size_t fork2)
 	pthread_mutex_unlock(&p->sim->fork_mtx[fork2]);
 }
 
-bool	track_meals(t_philo *p)
+t_return	track_meals(t_philo *p)
 {
 	p->meal_count++;
+	printf("PHILO %zu MEAL COUNT: %zu\n", p->p_id + 1, p->meal_count);
 	if (p->meal_count == p->sim->eat_rep)
 	{
 		pthread_mutex_lock(&p->sim->flag_mtx);
 		p->sim->flag++;
+		printf("FLAG VALUE: %zu\n", p->sim->flag);
 		if (p->sim->flag == p->sim->eat_rep)
 		{
 			pthread_mutex_unlock(&p->sim->flag_mtx);
-			return (true);
+			return (MEAL_COMP);
 		}
 		pthread_mutex_unlock(&p->sim->flag_mtx);
 	}
-	return (false);
+	return (MEAL_INCOMP);
 }
 
 void	pick_forks(t_philo *p, size_t fork1, size_t fork2)
@@ -64,8 +66,6 @@ void	pick_forks(t_philo *p, size_t fork1, size_t fork2)
 	}
 }
 
-
-
 bool	philo_eat(t_philo *p)
 {
 	size_t	l;
@@ -86,8 +86,8 @@ bool	philo_eat(t_philo *p)
 		p->lasteat_time = get_milli();
 		my_sleep(p, p->sim->tte);
 		release_fork(p, l, r);
-		if (track_meals(p))
-			return (false);
+		if (p->sim->eat_rep != -1 && track_meals(p) == MEAL_COMP)
+			return (MEAL_COMP);
 	}	
 	return (true);
 }
@@ -138,7 +138,8 @@ void	*routine(void *philo)
 		if (!philo_eat(p)
 			|| !philo_sleep(p)
 			|| !philo_think(p))
-			return (NULL);		
+			return (NULL);
+		usleep(100);
 	}
 }
 

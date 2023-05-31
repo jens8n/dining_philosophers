@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/31 01:02:48 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/05/31 19:08:45 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@
 # include <sys/time.h>
 # include <stdint.h>
 # include <string.h>
+
+enum s_return
+{
+	MEAL_COMP,
+	MEAL_INCOMP,
+} t_return;
 
 typedef struct s_philo	t_philo;
 
