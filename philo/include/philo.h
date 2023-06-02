@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/31 19:08:45 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/06/02 15:16:40 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,10 @@
 # include <stdint.h>
 # include <string.h>
 
-enum s_return
-{
+typedef enum s_mealupdate {
 	MEAL_COMP,
 	MEAL_INCOMP,
-} t_return;
+} t_mealupdate;
 
 typedef struct s_philo	t_philo;
 
@@ -47,7 +46,7 @@ typedef struct s_sim
 	size_t			ttd;
 	size_t			p_count;
 	size_t			start_time;
-	size_t			eat_rep;
+	ssize_t			eat_rep;
 	ssize_t			*fork;
 	t_philo			*philo;
 	pthread_mutex_t	*fork_mtx;
@@ -55,13 +54,13 @@ typedef struct s_sim
 	pthread_mutex_t	flag_mtx;
 	pthread_t		*p_th;
 	bool			dead_body;
-	size_t			flag;
+	ssize_t			flag;
 }	t_sim;
 
 typedef struct s_philo
 {
 	ssize_t			p_id;
-	size_t			meal_count;
+	ssize_t			meal_count;
 	size_t			lasteat_time;
 	t_sim			*sim;
 }	t_philo;
