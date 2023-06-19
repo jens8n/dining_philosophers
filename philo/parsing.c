@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:17:50 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/10 20:14:32 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/06/15 01:26:40 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,27 @@
 
 bool	parser(char **av)
 {
+	size_t	i;
+
+	i = 1;
 	if (!validate_arg(av))
 	{
 		printf("Invalid Arguments\n");
 		return (false);
+	}
+	if (av[5] != NULL && atos(av[5]) <= 0)
+	{
+		printf("PHILOSOPHERS DID NOT EAT\n");
+		return (false);
+	}
+	while (av[i])
+	{
+		if (atos(av[i]) > INT_MAX)
+		{
+			printf("Argument must be below INT_MAX\n");
+			return (false);
+		}
+		i++;
 	}
 	return (true);
 }
