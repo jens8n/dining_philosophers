@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 17:20:22 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/05/29 23:39:37 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/07/31 17:06:53 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	main(int ac, char **av)
 	{
 		if (init_sim_args(av, &sim) == false)
 		{
-			printf("Error: Input must be positive values\n");
+			printf("Error: Input must be > 0\n");
 			return (1);
 		}
 		make_threads(sim.philo);

@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/17 17:45:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/07/31 15:41:06 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/07/31 17:08:56 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ bool	init_sim_args(char **av, t_sim *sim)
 	sim->eat_rep = -1;
 	if (av[5] != NULL)
 		sim->eat_rep = atos(av[5]);
+	if (sim->p_count == 0 || sim->ttd == 0 || sim->tte == 0|| sim->tts == 0)
+		return (false);
 	sim->philo = (t_philo *)ft_calloc(sizeof(t_philo), sim->p_count); 
 	sim->dead_body = false;
 	sim->flag = 0;
