@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/24 20:13:32 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/06/15 01:12:09 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/07/31 15:50:25 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,12 @@ void	release_fork(t_philo *p, size_t fork1, size_t fork2)
 t_mealupdate	track_meals(t_philo *p)
 {
 	p->meal_count++;
-	printf("PHILO %zu MEAL COUNT: %zu\n", p->p_id + 1, p->meal_count);
 	if (p->meal_count == p->sim->eat_rep)
 	{
 		pthread_mutex_lock(&p->sim->flag_mtx);
 		p->sim->flag++;
-		printf("FLAG VALUE: %zu, P_COUNT: %zu\n", p->sim->flag, p->sim->p_count);
 		if (p->sim->flag == (ssize_t)p->sim->p_count)
 		{
-			printf("%zu: baty5a far5a\n", p->p_id);
 			pthread_mutex_unlock(&p->sim->flag_mtx);
 			return (MEAL_COMP);
 		}
@@ -87,8 +84,11 @@ bool	philo_eat(t_philo *p)
 		p->lasteat_time = get_milli();
 		my_sleep(p, p->sim->tte);
 		release_fork(p, l, r);
-		if (track_meals(p) == MEAL_COMP) //p->sim->eat_rep >= 0 &&
-			return (false);
+		if (p->sim->eat_rep != -1)
+		{
+			if (track_meals(p) == MEAL_COMP) //p->sim->eat_rep >= 0 &&
+				return (false);
+		}
 	}
 	pthread_mutex_lock( &p->sim->msg_mtx );
 	if ( p->sim->flag == (ssize_t)p->sim->p_count )
