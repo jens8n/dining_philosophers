@@ -6,11 +6,11 @@
 #    By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/10 16:41:43 by jebucoy           #+#    #+#              #
-#    Updated: 2023/08/17 21:17:01 by jebucoy          ###   ########.fr        #
+#    Updated: 2023/08/17 22:02:35 by jebucoy          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME	= philo
+NAME	= philo_bonus
 
 HEADER	=	./include
 
@@ -20,12 +20,11 @@ CFLAGS	=	-Wall -Wextra -Werror  -g3 -I $(HEADER) -pthread #-fsanitize=address
 
 SRCS	=	main.c \
 			parsing.c \
-			init.c	\
-			routine.c \
 			utils.c \
-			log_msg.c \
-			clean.c \
-			forks.c \
+			init.c \
+			strjoin.c \
+			itoa.c \
+			tasks.c \
 
 OBJS	= $(SRCS:.c=.o)
 

@@ -6,11 +6,11 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/11 16:17:50 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/08/17 21:09:21 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/08/17 21:44:01 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 bool	parser(char **av)
 {
@@ -24,7 +24,7 @@ bool	parser(char **av)
 	}
 	if (av[5] != NULL && atos(av[5]) <= 0)
 	{
-		printf("PHILOSOPHERS DID NOT EAT\n");
+		printf("PHILOSOPHERS CANNOT EAT\n");
 		return (false);
 	}
 	while (av[i])

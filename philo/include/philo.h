@@ -6,7 +6,7 @@
 /*   By: jebucoy <jebucoy@student.42abudhabi.ae>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/10 16:52:03 by jebucoy           #+#    #+#             */
-/*   Updated: 2023/06/02 15:16:40 by jebucoy          ###   ########.fr       */
+/*   Updated: 2023/08/17 21:30:09 by jebucoy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@
 typedef enum s_mealupdate {
 	MEAL_COMP,
 	MEAL_INCOMP,
-} t_mealupdate;
+}	t_mealupdate;
 
 typedef struct s_philo	t_philo;
 
@@ -44,9 +44,9 @@ typedef struct s_sim
 	size_t			tte;
 	size_t			tts;
 	size_t			ttd;
-	size_t			p_count;
+	size_t			philo_n;
 	size_t			start_time;
-	ssize_t			eat_rep;
+	ssize_t			eat_n;
 	ssize_t			*fork;
 	t_philo			*philo;
 	pthread_mutex_t	*fork_mtx;
@@ -65,26 +65,35 @@ typedef struct s_philo
 	t_sim			*sim;
 }	t_philo;
 
-bool	validate_arg(char **av);
-bool	parser(char **av);
-size_t	atos(char *str);
-void	*ft_calloc(size_t count, size_t size);
-bool	my_sleep(t_philo *philo, size_t sleep_time);
-size_t	get_milli(void);
+//parsing
+bool			validate_arg(char **av);
+bool			parser(char **av);
+size_t			atos(char *str);
 
-void	eat_log(t_philo *philo, size_t timestamp);
-void    think_log(t_philo *p, size_t timestamp);
-void    sleep_log(t_philo *p, size_t timestamp);
-void	death_log(t_philo *philo, size_t timestamp);
-void    task_log(t_philo *p, char *msg, char *rgb);
-void    fork_log(t_philo *p);
+//utils
+void			*ft_calloc(size_t count, size_t size);
+bool			my_sleep(t_philo *philo, size_t sleep_time);
+size_t			get_milli(void);
+bool			check_death(t_philo *philo);
 
-bool	check_death(t_philo *philo);
-bool	burial(t_philo *p);
+//initialization
+void			make_threads(t_sim *sim);
+void			define_struct(t_sim *sim);
+bool			init_sim_args(char **av, t_sim *sim);
 
-void	make_threads(t_philo *philo);
-void	define_struct(t_sim *sim);
-bool	init_sim_args(char **av, t_sim *sim);
-void	*routine(void *philo);
+//log message
+void			death_log(t_philo *philo, size_t timestamp);
+void			task_log(t_philo *p, char *msg, char *rgb);
+void			fork_log(t_philo *p);
+
+//eat task utils
+t_mealupdate	track_meals(t_philo *p);
+void			pick_forks(t_philo *p, size_t fork1, size_t fork2);
+void			release_fork(t_philo *p, size_t fork1, size_t fork2);
+bool			complete_meal(t_philo *p);
+
+//sim
+void			*routine(void *philo);
+bool			burial(t_sim *sim);
 
 #endif

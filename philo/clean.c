@@ -12,22 +12,18 @@
 
 #include "philo.h"
 
-// - function to clean up before stopping program
-// *free all allocations
-// *destroy all make_threads
-// return (true or false);
-
-bool   burial(t_philo *p)
+bool	burial(t_sim *sim)
 {
-    size_t i;
+	size_t	i;
 
-    i = -1;
-    death_log(p, get_milli() - p->sim->start_time);
-    while (++i < p->sim->p_count)
-        pthread_mutex_destroy(&p->sim->fork_mtx[i]);
-    pthread_mutex_destroy(&p->sim->msg_mtx);
-    free(p->sim->philo);
-    free(p->sim->fork);
-    free(p->sim->fork_mtx);
-    return (true);
+	i = -1;
+	free(sim->fork);
+	free(sim->philo);
+	while (++i < sim->philo_n)
+		pthread_mutex_destroy(&sim->fork_mtx[i]);
+	free(sim->fork_mtx);
+	pthread_mutex_destroy(&sim->msg_mtx);
+	pthread_mutex_destroy(&sim->flag_mtx);
+	free(sim->p_th);
+	return (true);
 }
